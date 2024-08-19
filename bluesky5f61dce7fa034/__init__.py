@@ -42,12 +42,16 @@ async def request_data(batch_size: int):
                     if response.status == 200:
                         data = await response.json()
                         return data
+                    elif response.status == 204:
+                        print("No content available. Backing off for 10 seconds...")
+                        await asyncio.sleep(10)
                     else:
                         print(f"Failed to fetch data: {response.status}")
                         return []
         except aiohttp.ClientConnectorError:
             print("Connection error. Retrying in 10 seconds...")
             await asyncio.sleep(10)
+
 
 def format_item(data: dict) -> Item:
     """
@@ -75,7 +79,7 @@ async def query(parameters: dict):
     """
     The main interface function that yields Items to the client core.
     """
-    batch_size = parameters.get("batch_size", 200)  # Default to 10 if not provided
+    batch_size = parameters.get("batch_size", 10)  # Default to 10 if not provided
 
     while True:
         if data_cache.is_empty():
