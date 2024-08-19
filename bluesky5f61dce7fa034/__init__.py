@@ -79,7 +79,7 @@ async def query(parameters: dict):
     """
     The main interface function that yields Items to the client core.
     """
-    batch_size = parameters.get("batch_size", 10)  # Default to 10 if not provided
+    batch_size = parameters.get("batch_size", 200)  # Default to 10 if not provided
 
     while True:
         if data_cache.is_empty():
